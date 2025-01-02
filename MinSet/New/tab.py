@@ -6,6 +6,7 @@ from tkinter import filedialog
 import json
 from itertools import islice
 import timeit
+import csv
 
 
 def measure_time(func):
@@ -68,23 +69,29 @@ class Tab(tk.Frame):
     def fill_tree(self, filePath):
         """Fill the treeview with data"""
         self.tree.delete(*self.tree.get_children())
+        data = []
         with open(filePath, "r") as f:
-            data_tmp = f.read().splitlines()
-            data = []
-            heads = [element.strip() for element in data_tmp[0].strip().split(";")]
-            heads.pop()
+            reader = csv.reader(f)
+            heads = next(reader)[0]
+            heads = [head.strip() for head in heads.split(";")]
+            data_tmp = list(reader)
+            # data_tmp = f.read().splitlines()
+            # heads = [element.strip() for element in data_tmp[0].strip().split(";")]
+            # heads.pop()
             self.tree.configure(columns=heads)
             for index, arg in enumerate(heads, start=1):
                 self.tree.heading(f"#{index}", text=arg)
                 self.tree.column(f"#{index}", anchor="center")
-            for line in islice(data_tmp, 1, None):
-                values = line.strip().split(";")
-                values.pop()
+            for line in data_tmp:
+                values = line[0].strip().split(";")
+                # values.pop()
                 values = [element.strip() for element in values]
                 dict_ = {}
                 for index, key in enumerate(heads):
                     if key == heads[-1]:
-                        connected = [int(x) for x in values[index:] if x != ""]
+                        connected = [
+                            int(x) for x in values[index].split(" ") if x != ""
+                        ]
                         # connected = ' '.join(map(str,key))
                         dict_[key] = connected
                         break
