@@ -54,7 +54,7 @@ class Paint(tk.Frame):
         )
         self.recolor_checkBtn.pack(side="left")
 
-        self.find_cell_btn_image = self._resize(r"New\images\find.gif", (13, 13))
+        self.find_cell_btn_image = self._resize(r"code\images\find.gif", (13, 13))
         self.find_cell_button = ttk.Button(
             self.top_frame, image=self.find_cell_btn_image, command=self.find
         )
