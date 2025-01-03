@@ -174,10 +174,6 @@ class Tab(tk.Frame):
             data_new[-1][keys[-1]] = self.typing(item.split(" "))
         return data_new
 
-    def mesure_time(self, func, number: int = 1, *args, **kwargs):
-        extcution_time = timeit.timeit(lambda: func(*args, **kwargs), number=number)
-        return extcution_time
-
     def typing(self, string_array: list):
         """
         Преобразует массив строк в массив элементов соответствующих типов.
