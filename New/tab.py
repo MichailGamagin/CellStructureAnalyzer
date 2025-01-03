@@ -1,10 +1,8 @@
 import tkinter as tk
 from tkinter import ttk
 from tkinterdnd2 import *
-from tkinter.messagebox import showerror, showinfo, showwarning
 from tkinter import filedialog
 import json
-from itertools import islice
 import timeit
 import csv
 
@@ -75,16 +73,12 @@ class Tab(tk.Frame):
             heads = next(reader)[0]
             heads = [head.strip() for head in heads.split(";")]
             data_tmp = list(reader)
-            # data_tmp = f.read().splitlines()
-            # heads = [element.strip() for element in data_tmp[0].strip().split(";")]
-            # heads.pop()
             self.tree.configure(columns=heads)
             for index, arg in enumerate(heads, start=1):
                 self.tree.heading(f"#{index}", text=arg)
                 self.tree.column(f"#{index}", anchor="center")
             for line in data_tmp:
                 values = line[0].strip().split(";")
-                # values.pop()
                 values = [element.strip() for element in values]
                 dict_ = {}
                 for index, key in enumerate(heads):
@@ -92,7 +86,6 @@ class Tab(tk.Frame):
                         connected = [
                             int(x) for x in values[index].split(" ") if x != ""
                         ]
-                        # connected = ' '.join(map(str,key))
                         dict_[key] = connected
                         break
                     dict_[key] = str(values[index].strip())
@@ -215,32 +208,11 @@ class Tab(tk.Frame):
 
 
 if __name__ == "__main__":
-    # root = TkinterDnD.Tk()
-    # root.title('General tab')
-    # root.notebooks = notebooks = ttk.Notebook(root)
-    # app = Tab(root, notebooks, number = '№',
-    #                             cell_form = 'Форма ячейки',
-    #                             type_cell = 'Тип ячейки',
-    #                             area_cell = 'Площадь ячейки',
-    #                             hydraulic_diameter = 'Гидравлический диаметр',
-    #                             wet_perimeter = 'Смоченный периметр',
-    #                             heated_perimeter = 'Обогреваемый периметр',
-    #                             temp = 'Температура',
-    #                             connected = 'Связан с ячейками:'
-    #                             )
-    # app.pack()
-    # root.mainloop()
 
     root1 = TkinterDnD.Tk()
     root1.title("General tab")
     root1.notebooks = notebooks = ttk.Notebook(root1)
     app1 = Tab(root1, notebooks)
-    #   number= '№',
-    #   type = 'Тип',
-    #   x = 'X',
-    #   y = 'Y',
-    #   diameter = 'Диаметр',
-    #   connected= 'Связан с элементами:')
     app1.pack()
 
     root1.mainloop()

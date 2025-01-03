@@ -1,14 +1,12 @@
 import tkinter as tk
 from tkinter import ttk
 from tkinter.font import Font
-from tkinter import filedialog
 from tkinter.messagebox import showerror, showinfo, showwarning
 from PIL import Image, ImageDraw, ImageTk
 from colour import Color
 from geometry import Geometry
 from cells import Cells
 from tkinterdnd2 import *
-import timeit
 from tab import measure_time
 
 
@@ -149,10 +147,6 @@ class Paint(tk.Frame):
         )
 
         self.setiing_defaults()
-
-    def mesure_time(self, func, number: int = 1, *args, **kwargs):
-        extcution_time = timeit.timeit(lambda: func(*args, **kwargs), number=number)
-        return extcution_time
 
     def _resize(self, filePath: str, new_size: tuple):
         """Метод изменения размера импортируемых изображений"""
@@ -461,7 +455,6 @@ class Paint(tk.Frame):
         self.recolor_checkBtn.config(state="normal")
         self.recolor_chekBtn_enabled.set(0)
 
-    @measure_time
     def open_file(self):
         """Метод открытия файлов путем нажатия на кнопку "Open" в меню "File" """
         self.setiing_defaults()
@@ -473,21 +466,11 @@ class Paint(tk.Frame):
         self.file_path_cells_lbl.config(text=self.file_path_cells)
         self.data_cells = Cells.DATA
         try:
-            print("****Время выполнения методов во вкладке Рисунок****")
             self.new_data_geometry = self.convert_data(self.data_geometry)
             if self.data_geometry and self.data_cells:
-                running_time = self.mesure_time(
-                    self.draw_cells,
-                    data_cells=self.data_cells,
-                    data_geometry=self.new_data_geometry,
-                )
-                print(f"Время выполнения draw_cells={running_time} секунд")
-                # self.draw_cells(self.data_cells, self.new_data_geometry)
-                running_time = self.mesure_time(
-                    self.draw_rod, data=self.new_data_geometry
-                )
-                print(f"Время выполнения draw_rod={running_time} секунд")
-                # self.draw_rod(self.new_data_geometry)
+                self.draw_cells(self.data_cells, self.new_data_geometry)
+                self.draw_rod(self.new_data_geometry)
+                self.create_text_rod(self.new_data_geometry)
             else:
                 self.setiing_defaults()
 
@@ -604,9 +587,8 @@ class Paint(tk.Frame):
                     element["Y"] + element["Диаметр"] / 2,
                     **self.canvas.properties_circles,
                 )
-            # self.canvas.update()
-        self.create_text_rod(data)
 
+    @measure_time
     def create_text_rod(self, data: list):
         """Метод отрисовки номеров стержней на холсте"""
         keys = tuple(data[0].keys())  # Заголовки таблицы

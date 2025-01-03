@@ -1,6 +1,6 @@
 from tkinter import ttk
 from tkinterdnd2 import *
-from tkinter.messagebox import showerror, showinfo, showwarning
+from tkinter.messagebox import showerror
 from colour import Color
 from tab import measure_time
 from tab import Tab
@@ -113,16 +113,6 @@ class Cells(Tab):
         self.data = self.get_data_from_tree(self.data)
         Cells.DATA = self.data
         Cells.TEMP_GRADIENT = self.get_gradient(self.data, "Температура")
-
-        print("****Время выполнения методов во вкладке Ячеки****")
-        # running_time = self.mesure_time(self.fill_tree, filePath=self.tree.path_to_data)
-        # print(f"Время выполнения fill_tree={running_time} секунд")
-        # running_time = self.mesure_time(self.get_data_from_tree, data=self.data)
-        # print(f"Время выполнения get_data_from_tree={running_time} секунд")
-        # running_time = self.mesure_time(
-        #     self.get_gradient, data=self.data, parameter="Температура"
-        # )
-        # print(f"Время выполнения get_gradient={running_time} секунд")
 
 
 if __name__ == "__main__":
