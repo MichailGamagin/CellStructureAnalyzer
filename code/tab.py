@@ -162,9 +162,11 @@ class Tab(tk.Frame):
         data_new = []
         for row in self.tree.get_children(""):
             values = self.tree.item(row)["values"]
-            item = values[-1]
+            last_item = values[-1]
+            if float(values[2]) == 0.0 and float(values[3]) == 0.0:
+                continue
             data_new.append(dict(zip(keys, self.typing(values))))
-            data_new[-1][keys[-1]] = self.typing(item.split(" "))
+            data_new[-1][keys[-1]] = self.typing(last_item.split(" "))
         return data_new
 
     def typing(self, string_array: list):
