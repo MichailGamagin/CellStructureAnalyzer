@@ -484,18 +484,32 @@ class Paint(tk.Frame):
         pass
 
     def convert_data(self, data: list) -> list:
-        keys = tuple(data[0].keys())  # Заголовки таблицы
+        """Перевод координат в центр холста"""
+        if not all(
+            isinstance(item, dict) and "X" in item and "Y" in item for item in data
+        ):
+            raise ValueError(
+                "Each item in data must be a dictionary with 'X' and 'Y' keys"
+            )
+
         xArr = []
         yArr = []
         for item in data:
             xArr.append(item["X"])
             yArr.append(item["Y"])
-        deltaX = (min(xArr) + max(xArr)) / 2 - self.canvas.winfo_width() / 2
-        deltaY = (min(yArr) + max(yArr)) / 2 - self.canvas.winfo_height() / 2
-        for element in data:
+        canvas_width = (
+            self.canvas.winfo_width() if self.canvas.winfo_width() > 1 else 800
+        )
+        canvas_height = (
+            self.canvas.winfo_height() if self.canvas.winfo_height() > 1 else 450
+        )
+        deltaY = (min(yArr) + max(yArr)) / 2 - canvas_height / 2
+        deltaX = (min(xArr) + max(xArr)) / 2 - canvas_width / 2
+        data_copy = [element.copy() for element in data]
+        for element in data_copy:
             element["X"] = element["X"] - deltaX
             element["Y"] = element["Y"] - deltaY
-        return data
+        return data_copy
 
     def recolor_typeСells_to_temperatureСells(self):
         """Метод перекрашивания ячеек из поля type_cell в поле температур"""
@@ -633,6 +647,7 @@ class Paint(tk.Frame):
                     if connected_element:
                         points.append((connected_element["X"], connected_element["Y"]))
                 # self.canvas.update()
+            # self.canvas.geometry_coordinates = dict(
             rect = self.canvas.create_polygon(*points, **self.canvas.properties_rects)
 
     def redraw(
@@ -649,5 +664,4 @@ if __name__ == "__main__":
     root.notebooks = notebooks = ttk.Notebook(root)
     app = Paint(root, notebooks)
     app.pack()
-    app.open_file()
     root.mainloop()
