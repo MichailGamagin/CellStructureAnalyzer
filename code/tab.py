@@ -1,22 +1,10 @@
 import tkinter as tk
 from tkinter import ttk
-from tkinterdnd2 import *
+from tkinterdnd2 import TkinterDnD, DND_ALL
 from tkinter import filedialog
 import json
-import timeit
+from measure_time import measure_time
 import csv
-
-
-def measure_time(func):
-    def wrapper(*args, **kwargs):
-        start_time = timeit.default_timer()
-        result = func(*args, **kwargs)
-        end_time = timeit.default_timer()
-        execution_time = end_time - start_time
-        print(f"Время выполнения {func.__name__}={execution_time} секунд")
-        return result
-
-    return wrapper
 
 
 class Tab(tk.Frame):
@@ -163,8 +151,12 @@ class Tab(tk.Frame):
         for row in self.tree.get_children(""):
             values = self.tree.item(row)["values"]
             last_item = values[-1]
-            if float(values[2]) == 0.0 and float(values[3]) == 0.0:
-                continue
+            try:
+                if float(values[2]) == 0.0 and float(values[3]) == 0.0:
+                    continue
+            except(ValueError, TypeError):
+                raise ValueError('Значения в 2 и 3 столбце не являются числами')
+
             data_new.append(dict(zip(keys, self.typing(values))))
             data_new[-1][keys[-1]] = self.typing(last_item.split(" "))
         return data_new

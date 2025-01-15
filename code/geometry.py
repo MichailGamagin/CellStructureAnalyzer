@@ -1,6 +1,7 @@
 from tkinter import ttk
 from tkinterdnd2 import *
-from tab import Tab, measure_time
+from tab import Tab
+from measure_time import measure_time
 
 
 class Geometry(Tab):
@@ -19,10 +20,12 @@ class Geometry(Tab):
 
     @measure_time
     def apply(self):
-        Geometry.PATH_TO_DATA = self.path_to_data
-        self.data = self.get_data_from_tree(self.data)
-
-        Geometry.DATA = self.data
+        try:
+            Geometry.PATH_TO_DATA = self.path_to_data
+            self.data = self.get_data_from_tree(self.data)
+            Geometry.DATA = self.data
+        except(AttributeError):
+            raise AttributeError('Нет данных')
 
 
 if __name__ == "__main__":

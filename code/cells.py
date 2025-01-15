@@ -1,8 +1,8 @@
 from tkinter import ttk
-from tkinterdnd2 import *
+from tkinterdnd2 import TkinterDnD
 from tkinter.messagebox import showerror
 from colour import Color
-from tab import measure_time
+from measure_time import measure_time
 from tab import Tab
 
 
@@ -15,15 +15,6 @@ class Cells(Tab):
         super().__init__(
             root,
             notebooks,
-            number="№",
-            cell_form="Форма ячейки",
-            type_cell="Тип ячейки",
-            area_cell="Площадь ячейки",
-            hydraulic_diameter="Гидравлический диаметр",
-            wet_perimeter="Смоченный периметр",
-            heated_perimeter="Обогреваемый периметр",
-            temp="Температура",
-            connected="Связан с ячейками:",
         )
 
     def get_gradient(self, data: list, parameter: str):
@@ -109,11 +100,13 @@ class Cells(Tab):
 
     @measure_time
     def apply(self):
-        Cells.PATH_TO_DATA = self.path_to_data
-        self.data = self.get_data_from_tree(self.data)
-        Cells.DATA = self.data
-        Cells.TEMP_GRADIENT = self.get_gradient(self.data, "Температура")
-
+        try:
+            Cells.PATH_TO_DATA = self.path_to_data
+            self.data = self.get_data_from_tree(self.data)
+            Cells.DATA = self.data
+            Cells.TEMP_GRADIENT = self.get_gradient(self.data, "Температура")
+        except(AttributeError):
+            raise AttributeError('Нет данных')
 
 if __name__ == "__main__":
     root = TkinterDnD.Tk()

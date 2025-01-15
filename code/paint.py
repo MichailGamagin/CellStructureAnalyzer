@@ -6,8 +6,8 @@ from PIL import Image, ImageDraw, ImageTk
 from colour import Color
 from geometry import Geometry
 from cells import Cells
-from tkinterdnd2 import *
-from tab import measure_time
+from tkinterdnd2 import TkinterDnD
+from measure_time import measure_time
 
 
 class Paint(tk.Frame):
@@ -54,7 +54,7 @@ class Paint(tk.Frame):
         )
         self.recolor_checkBtn.pack(side="left")
 
-        self.find_cell_btn_image = self._resize(r"code\images\find.gif", (13, 13))
+        self.find_cell_btn_image = self._resize(r".\images\find.gif", (13, 13))
         self.find_cell_button = ttk.Button(
             self.top_frame, image=self.find_cell_btn_image, command=self.find
         )
@@ -489,7 +489,7 @@ class Paint(tk.Frame):
             isinstance(item, dict) and "X" in item and "Y" in item for item in data
         ):
             raise ValueError(
-                "Each item in data must be a dictionary with 'X' and 'Y' keys"
+                "Каждый элемент в data должен быть словарем с 'X' и 'Y' - ключами"
             )
 
         xArr = []
@@ -647,7 +647,6 @@ class Paint(tk.Frame):
                     if connected_element:
                         points.append((connected_element["X"], connected_element["Y"]))
                 # self.canvas.update()
-            # self.canvas.geometry_coordinates = dict(
             rect = self.canvas.create_polygon(*points, **self.canvas.properties_rects)
 
     def redraw(
