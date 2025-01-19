@@ -504,7 +504,7 @@ class Paint(tk.Frame):
                     "png",
                     dpi=(300, 300),
                     quality=100,
-                    ghostscript="C:\Program Files\gs\gs10.04.0\bin\gswin64c.exe",
+                    ghostscript="C:\Program Files\gs",
                 )
                 showinfo(title="Сохранение", message="Файл успешно сохранён.")
             except Exception as e:
