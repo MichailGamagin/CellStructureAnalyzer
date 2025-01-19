@@ -82,14 +82,15 @@ class Tab(tk.Frame):
         return data
 
     def open_file(self, event=None):
-        if event is None:
-            self.tree.path_to_data = filedialog.askopenfilename()
-        else:
-            self.tree.path_to_data = str(event.data).lstrip("{").rstrip("}")
-        if self.tree.path_to_data == "":
-            return
-        self.data = self.fill_tree(self.tree.path_to_data)
-        Tab.path_to_data = self.tree.path_to_data
+        path_to_data = (
+            filedialog.askopenfilename(initialdir=r".\Geometry")
+            if event is None
+            else str(event.data).strip("{}")
+        )
+        if path_to_data:
+            self.data = self.fill_tree(path_to_data)
+            Tab.path_to_data = path_to_data
+        self.apply()
 
     def edit(self, event):
         """
@@ -154,8 +155,8 @@ class Tab(tk.Frame):
             try:
                 if float(values[2]) == 0.0 and float(values[3]) == 0.0:
                     continue
-            except(ValueError, TypeError):
-                raise ValueError('Значения в 2 и 3 столбце не являются числами')
+            except (ValueError, TypeError):
+                raise ValueError("Значения в 2 и 3 столбце не являются числами")
 
             data_new.append(dict(zip(keys, self.typing(values))))
             data_new[-1][keys[-1]] = self.typing(last_item.split(" "))
@@ -208,5 +209,6 @@ if __name__ == "__main__":
     root1.notebooks = notebooks = ttk.Notebook(root1)
     app1 = Tab(root1, notebooks)
     app1.pack()
+    app1.open_file()
 
     root1.mainloop()

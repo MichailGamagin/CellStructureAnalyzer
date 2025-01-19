@@ -79,7 +79,8 @@ class App:
             self.third_tab.open_file()
 
     def save_file(self):
-        pass
+        if self.notebooks.active_tab == 0:
+            self.first_tab.save_file()
 
 
 if __name__ == "__main__":

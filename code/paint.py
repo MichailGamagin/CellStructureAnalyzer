@@ -1,5 +1,5 @@
 import tkinter as tk
-from tkinter import ttk
+from tkinter import ttk, filedialog
 from tkinter.font import Font
 from tkinter.messagebox import showerror, showinfo, showwarning
 from PIL import Image, ImageDraw, ImageTk
@@ -479,9 +479,36 @@ class Paint(tk.Frame):
                 title="Ошибка", message=f"Отсутствуют исходные данные. Смотри вкладки"
             )
 
+    # def save_file(self):
+    #     """Метод сохранения изображения на холсте"""
+
     def save_file(self):
         """Метод сохранения изображения на холсте"""
-        pass
+        file_path = tk.filedialog.asksaveasfilename(
+            defaultextension=".png",
+            filetypes=[("PNG files", "*.png"), ("All files", "*.*")],
+            initialdir=r".\Results",
+        )
+        if file_path:
+            try:
+                self.canvas.update()  # Ensure the canvas is up-to-date
+                self.canvas.postscript(
+                    file="temp_canvas.eps", pageheight=1000, pagewidth=1000
+                )
+
+                img = Image.open("temp_canvas.eps")
+                img.load(transparency=True)
+
+                img.save(
+                    file_path,
+                    "png",
+                    dpi=(300, 300),
+                    quality=100,
+                    ghostscript="C:\Program Files\gs\gs10.04.0\bin\gswin64c.exe",
+                )
+                showinfo(title="Сохранение", message="Файл успешно сохранён.")
+            except Exception as e:
+                showerror(title="Ошибка", message=f"Ошибка при сохранении файла: {e}")
 
     def convert_data(self, data: list) -> list:
         """Перевод координат в центр холста"""
