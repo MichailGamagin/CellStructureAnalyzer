@@ -479,33 +479,46 @@ class Paint(tk.Frame):
                 title="Ошибка", message=f"Отсутствуют исходные данные. Смотри вкладки"
             )
 
-    # def save_file(self):
-    #     """Метод сохранения изображения на холсте"""
 
     def save_file(self):
         """Метод сохранения изображения на холсте"""
-        file_path = tk.filedialog.asksaveasfilename(
+        file_path = filedialog.asksaveasfilename(
             defaultextension=".png",
             filetypes=[("PNG files", "*.png"), ("All files", "*.*")],
             initialdir=r".\Results",
         )
         if file_path:
             try:
-                self.canvas.update()  # Ensure the canvas is up-to-date
+                self.canvas.update()
+                items = self.canvas.find_all()
+                relevant_items = []
+                for item in items:
+                    if (
+                        "rect" in self.canvas.gettags(item)
+                        or "circle" in self.canvas.gettags(item)
+                        or "text" in self.canvas.gettags(item)
+                        or "text4" in self.canvas.gettags(item)
+                    ):
+                        relevant_items.append(item)
+
+                if relevant_items:
+                    x1, y1, x2, y2 = self.canvas.bbox(*relevant_items)
+                else:
+                    x1, y1, x2, y2 = 0, 0, 1, 1
+
                 self.canvas.postscript(
-                    file="temp_canvas.eps", pageheight=1000, pagewidth=1000
+                    file="temp_canvas.eps",
+                    pagex=x1,
+                    pagey=y1,
+                    pagewidth=x2 - x1,
+                    pageheight=y2 - y1,
                 )
 
                 img = Image.open("temp_canvas.eps")
                 img.load(transparency=True)
+                img = img.crop(img.getbbox())
+                img.save(file_path, "png", dpi=(300, 300), quality=100)
 
-                img.save(
-                    file_path,
-                    "png",
-                    dpi=(300, 300),
-                    quality=100,
-                    ghostscript="C:\Program Files\gs",
-                )
                 showinfo(title="Сохранение", message="Файл успешно сохранён.")
             except Exception as e:
                 showerror(title="Ошибка", message=f"Ошибка при сохранении файла: {e}")
